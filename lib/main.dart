@@ -95,37 +95,26 @@ test() {
 }
 
 class ListaTransferencias extends StatefulWidget {
-
+  final List<Transferencia> _transferencias = [];
   @override
-  _ListaTransferenciasState createState() => _ListaTransferenciasState();
-  // final List<Transferencia> _transferencias = [];
-
-  //@override
-  // State<StatefulWidget> createState() {
-  //   return ListaTransferenciasState();
-  // }
-
+   State<StatefulWidget> createState() {
+     return ListaTransferenciasState();
+   }
 }
 
-class _ListaTransferenciasState extends State<ListaTransferencias> {
+class ListaTransferenciasState extends State<ListaTransferencias> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Transferencia> _transferencias = [];
-
-    // widget._transferencias.add(Transferencia(100.0, 377541));
-    // Trabalhando com statful não se pode fazer esse tipo de adição,
-    // pois esse código vai rodar várias vezes e isso vai deixar o sistema zuado.
-    // Poderia ser usado normalmente no statless component
-    _transferencias.add(Transferencia(100.0, 1000));
+    widget._transferencias.add(Transferencia(100.0, 1000));
     return Scaffold(
       appBar: AppBar(
         title: Text('Transferências'),
       ),
       body: ListView.builder(
-        itemCount: _transferencias.length,
+        itemCount: widget._transferencias.length,
         itemBuilder: (context, indice) {
-          final transferencia = _transferencias[indice];
+          final transferencia = widget._transferencias[indice];
           return ItemTransferencia(transferencia);
         },
       ),
@@ -141,12 +130,14 @@ class _ListaTransferenciasState extends State<ListaTransferencias> {
           future.then((transferenciaRecebida) {
             debugPrint('Chegou no then do future');
             debugPrint('$transferenciaRecebida');
-            transferenciaRecebida != null ? _transferencias.add(transferenciaRecebida) : debugPrint('null');
+            //transferenciaRecebida != null ? _transferencias.add(transferenciaRecebida) : debugPrint('null');
             //_transferencias.add(transferenciaRecebida!);
             if(transferenciaRecebida != null) {
-              _transferencias.add(transferenciaRecebida!);
+              setState(() {
+                widget._transferencias.add(transferenciaRecebida!);
+              });
             }
-            debugPrint('$_transferencias');
+            debugPrint('$widget._transferencias');
           });
         },
       ),
